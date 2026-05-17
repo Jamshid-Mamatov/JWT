@@ -9,9 +9,9 @@ class RsaSigner implements SignerInterface
         'RS512' => OPENSSL_ALGO_SHA512,
     ];
 
-    public function __construct(private readonly string $privateKey, private readonly string $publicKey, private readonly string $algorithm = 'RS256')
+        public function __construct(private readonly string $privateKey, private readonly string $publicKey, private readonly string $algorithm = 'RS256')
     {
-        if(!in_array($this->algorithm,$this->algMap)){
+        if(!array_key_exists($this->algorithm,$this->algMap)){
             throw new \InvalidArgumentException('Invalid algorithm');
         }
     }

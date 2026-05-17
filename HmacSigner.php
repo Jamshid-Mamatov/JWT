@@ -16,7 +16,7 @@ class HmacSigner implements SignerInterface
             throw new \InvalidArgumentException('Invalid algorithm');
         }
 
-        print_r(strlen($this->secret));
+//        print_r(strlen($this->secret));
         if(strlen($this->secret)<32){
             throw new \InvalidArgumentException('Invalid secret');
         }

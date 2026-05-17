@@ -26,7 +26,7 @@ class JWT
         $payloadEncoded = Base64URL::encode(json_encode($payload));
 
         $signingInput = "{$headerEncoded}.{$payloadEncoded}";
-
+        echo 'signingInput: ' . $signingInput . "\n";
         $signatureEncoded = Base64URL::encode($this->signer->sign($signingInput));
 
 
@@ -47,11 +47,11 @@ class JWT
        }
 
        [$headerEncoded, $payloadEncoded, $signatureEncoded] = $parts;
-
+        $header = json_decode(Base64URL::decode($headerEncoded), true);
         if (($header['alg'] ?? '') !== $this->signer->algorithmId()) {
             // CRITICAL: Reject algorithm mismatch
             // The classic "alg:none" attack exploits servers that accept any alg
-            throw new \http\Exception\RuntimeException(
+            throw new \RuntimeException(
                 "Algorithm mismatch: token uses [{$header['alg']}], signer expects [{$this->signer->algorithmId()}]"
             );
         }
@@ -60,7 +60,7 @@ class JWT
         $signature = Base64URL::decode($signatureEncoded);
 
         if(!$this->signer->verify($signingInput,$signature)){
-            throw new \http\Exception\RuntimeException('Invalid signature');
+            throw new \RuntimeException('Invalid signature');
         }
 
         $payload = json_decode(Base64URL::decode($payloadEncoded),true);
@@ -68,16 +68,16 @@ class JWT
         $now=time();
 
         if($verifyExpiry && isset($payload['exp']) && $payload['exp']<$now){
-            throw new \http\Exception\RuntimeException('Expired token');
+            throw new \RuntimeException('Expired token');
         }
 
         if(isset($payload['nbf']) && $payload['nbf']>$now){
-            throw new \http\Exception\RuntimeException('Token not yet active');
+            throw new \RuntimeException('Token not yet active');
         }
 
         foreach ($requiredClaims as $claim) {
             if(!array_key_exists($claim,$payload)){
-                throw new \http\Exception\RuntimeException("Missing required claim: {$claim}");
+                throw new \RuntimeException("Missing required claim: {$claim}");
             }
         }
 

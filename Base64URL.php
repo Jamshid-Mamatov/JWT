@@ -30,11 +30,3 @@ class Base64URL
         return $decoded;
     }
 }
-$encoded = Base64URL::encode('{"alg":"HS256","typ":"JWT"}');
-//$encoded = Base64URL::encode('Jamshid');
-
-print_r($encoded);
-
-$decoded = Base64URL::decode($encoded);
-
-print_r($decoded);
