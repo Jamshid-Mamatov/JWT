@@ -16,13 +16,12 @@ class AuthService
     public function login(string $email, string $password)
     {
         $user = $this->userRepository->findByEmail($email);
-
         if($user === null){
             throw new RuntimeException('Invalid credentials');
         }
 
-        if(!password_verify($password, $user->password)){
-            throw new RuntimeException('Invalid credentials');
+        if(!password_verify($password, $user['password'])){
+            throw new RuntimeException('Invalid credentials in password hash');
         }
 
         $token = $this->createToken($user);

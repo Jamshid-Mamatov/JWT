@@ -26,7 +26,6 @@ class JWT
         $payloadEncoded = Base64URL::encode(json_encode($payload));
 
         $signingInput = "{$headerEncoded}.{$payloadEncoded}";
-        echo 'signingInput: ' . $signingInput . "\n";
         $signatureEncoded = Base64URL::encode($this->signer->sign($signingInput));
 
 
